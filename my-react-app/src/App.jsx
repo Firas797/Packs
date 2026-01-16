@@ -226,9 +226,9 @@ function App() {
                     <span className="price-amount">{plan.price}</span>
                     <span className="price-currency">{plan.currency}</span>
                   </div>
-                  <div className="price-duration">
+                  {/* <div className="price-duration">
                     {Math.round(plan.price / plan.duration)} {plan.currency} {content[lang].monthly}
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="plan-bestfor">
