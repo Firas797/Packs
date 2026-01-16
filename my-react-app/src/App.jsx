@@ -4,6 +4,7 @@ import "./App.css";
 function App() {
   const [lang, setLang] = useState("fr");
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   const content = {
     fr: {
@@ -18,7 +19,8 @@ function App() {
       guaranteed: "✓ Résultats garantis",
       monthly: "/mois",
       bestFor: "Idéal pour",
-      startingAt: "À partir de"
+      startingAt: "À partir de",
+      choosePlan: "Choisir cette offre"
     },
     ar: {
       heroTitle: "حوّل مدرستك إلى مرجع رقمي متميز",
@@ -32,7 +34,8 @@ function App() {
       guaranteed: "✓ نتائج مضمونة",
       monthly: "/شهر",
       bestFor: "مثالي لـ",
-      startingAt: "ابتداءً من"
+      startingAt: "ابتداءً من",
+      choosePlan: "اختر هذه الباقة"
     },
   };
 
@@ -151,6 +154,11 @@ function App() {
     }
   };
 
+  const handlePlanSelect = (planId) => {
+    setSelectedPlan(planId);
+    scrollToContact();
+  };
+
   return (
     <div className="app" dir={lang === "ar" ? "rtl" : "ltr"}>
       {/* LANGUAGE SWITCH */}
@@ -176,20 +184,6 @@ function App() {
         </div>
         <h1>{content[lang].heroTitle}</h1>
         <p>{content[lang].heroDesc}</p>
-        
-        {/* <div className="hero-actions">
-          <a
-            href="https://porfolio-topaz-delta.vercel.app/"
-            target="_blank"
-            rel="noreferrer"
-            className="btn-portfolio"
-          >
-            {content[lang].portfolio}
-          </a>
-          <div className="expert-badge">
-            💻 {lang === "fr" ? "Développeur Full-Stack & IT Manager" : "مطور Full-Stack ومدير تكنولوجيا المعلومات"}
-          </div>
-        </div> */}
       </header>
 
       {/* PRICING */}
@@ -202,93 +196,100 @@ function App() {
         </div>
         
         <div className="pricing-cards">
+          
           {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`card ${plan.popular ? "popular" : ""}`}
-              style={{ 
-                borderTop: `4px solid ${plan.color}`,
-                transform: hoveredCard === plan.id ? 'translateY(-10px)' : 'none'
-              }}
-              onMouseEnter={() => setHoveredCard(plan.id)}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-            
-              {plan.popular && (
-                <div className="badge popular-badge">
-                  {content[lang].recommended}
+            <div key={plan.id} className="plan-card-wrapper">
+              <div
+                className={`card ${plan.popular ? "popular" : ""}`}
+                style={{ 
+                  borderTop: `4px solid ${plan.color}`,
+                  transform: hoveredCard === plan.id ? 'translateY(-10px)' : 'none'
+                }}
+                onMouseEnter={() => setHoveredCard(plan.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                {plan.popular && (
+                  
+                  <div className="badge popular-badge ">
+                    {content[lang].recommended}
+                  </div>
+                )}
+                
+                <div className="plan-tag" style={{ backgroundColor: `${plan.color}20` }}>
+                  {plan.tag}
                 </div>
-              )}
-              
-              <div className="plan-tag" style={{ backgroundColor: `${plan.color}20` }}>
-                {plan.tag}
-              </div>
-              
-              <h2>{plan.name}</h2>
-              
-              <div className="price-container">
-                <div className="price-main">
-                  <span className="price-amount">{plan.price}</span>
-                  <span className="price-currency">{plan.currency}</span>
+                
+                <h2>{plan.name}</h2>
+                
+                <div className="price-container">
+                  <div className="price-main">
+                    <span className="price-amount">{plan.price}</span>
+                    <span className="price-currency">{plan.currency}</span>
+                  </div>
+                  <div className="price-duration">
+                    {Math.round(plan.price / plan.duration)} {plan.currency} {content[lang].monthly}
+                  </div>
                 </div>
-                <div className="price-duration">
-                  {Math.round(plan.price / plan.duration)} {plan.currency} {content[lang].monthly}
+
+                <div className="plan-bestfor">
+                  <strong>{content[lang].bestFor}:</strong> {plan.bestFor}
+                </div>
+
+                <ul>
+                  {plan.features.map((f, i) => (
+                    <li key={i}>
+                      <span className="check-icon">✓</span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="plan-extras">
+                  <span>📞 {content[lang].freeConsult}</span>
+                  <span>🛡️ {content[lang].guaranteed}</span>
                 </div>
               </div>
-
-              <div className="plan-bestfor">
-                <strong>{content[lang].bestFor}:</strong> {plan.bestFor}
-              </div>
-
-              <ul>
-                {plan.features.map((f, i) => (
-                  <li key={i}>
-                    <span className="check-icon">✓</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="plan-extras">
-                <span>📞 {content[lang].freeConsult}</span>
-                <span>🛡️ {content[lang].guaranteed}</span>
-              </div>
-
+              
+              {/* BUTTON OUTSIDE THE CARD */}
               <button 
-                className="plan-button"
+                className="plan-button-outer"
                 style={{ 
                   background: `linear-gradient(135deg, ${plan.color}, ${plan.color}CC)`
                 }}
-                onClick={scrollToContact}
+                onClick={() => handlePlanSelect(plan.id)}
               >
-                {content[lang].button}
+                {content[lang].choosePlan}
               </button>
             </div>
           ))}
         </div>
       </section>
 
-      {/* CONTACT - Added id for scrolling */}
+      {/* CONTACT */}
       <section id="contact-section" className="contact">
         <div className="contact-container">
           <div className="contact-info">
             <h2>{content[lang].contact}</h2>
             
-            <div className="portfolio-section">
-              <p style={{ marginBottom: '15px', color: '#666' }}>
-                {lang === "fr" 
-                  ? "Découvrez mes réalisations et compétences techniques"
-                  : "اكتشف إنجازاتي ومهاراتي التقنية"}
-              </p>
-              <a 
-                href="https://porfolio-topaz-delta.vercel.app/" 
-                target="_blank" 
-                rel="noreferrer"
-                className="portfolio-link"
-              >
-                🔗 {lang === "fr" ? "Voir mon portfolio complet" : "عرض ملفي الشخصي الكامل"}
-              </a>
-            </div>
+            {selectedPlan && (
+              <div className="selected-plan-banner">
+                <div className="banner-icon"></div>
+                <div className="banner-content">
+                  <h3>
+                    {lang === "fr" ? "Pack sélectionné : " : "لقد اخترت: "}
+                    <span style={{ color: plans.find(p => p.id === selectedPlan)?.color }}>
+                      {plans.find(p => p.id === selectedPlan)?.name}
+                    </span>
+                  </h3>
+                  <p>
+                    {lang === "fr" 
+                      ? "Discutons de votre projet pour cette offre !" 
+                      : "دعنا نناقش مشروعك لهذه الباقة!"}
+                  </p>
+                </div>
+              </div>
+            )}
+        
             
             <div className="contact-details">
               <div className="contact-item">
@@ -322,6 +323,22 @@ function App() {
               </a>
               <a href="https://porfolio-topaz-delta.vercel.app/" target="_blank" rel="noreferrer" className="social-btn portfolio">
                 💼 Portfolio
+              </a>
+            </div>
+                <br/>
+            <div className="portfolio-section">
+              <p style={{ marginBottom: '15px', color: '#666' }}>
+                {lang === "fr" 
+                  ? "Découvrez mes réalisations et compétences techniques"
+                  : "اكتشف إنجازاتي ومهاراتي التقنية"}
+              </p>
+              <a 
+                href="https://porfolio-topaz-delta.vercel.app/" 
+                target="_blank" 
+                rel="noreferrer"
+                className="portfolio-link"
+              >
+                🔗 {lang === "fr" ? "Voir mon portfolio complet" : "عرض ملفي الشخصي الكامل"}
               </a>
             </div>
           </div>
