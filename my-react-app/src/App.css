@@ -250,7 +250,31 @@ body {
 .popular {
   transform: scale(1.05);
 }
+/* Ajoutez ceci à votre fichier App.css */
 
+.test-link {
+  color: #10B981;
+  text-decoration: underline;
+  margin-left: 5px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.test-link:hover {
+  color: #0ea271;
+  text-decoration: none;
+}
+
+/* Pour les cartes en arabe, ajuster la marge */
+.app[dir="rtl"] .test-link {
+  margin-left: 0;
+  margin-right: 5px;
+}
+
+/* Style pour les liens dans la liste */
+.card ul li a {
+  display: inline;
+}
 .popular-badge {
   position: absolute;
   top: 5px;

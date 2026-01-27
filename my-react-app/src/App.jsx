@@ -116,8 +116,8 @@ function App() {
       color: "#10B981",
       features: [
         lang === "fr"
-          ? "Application scolaire complète ( site web ) "
-          : "تطبيق مدرسي متكامل (محمول ويب)",
+          ? "Application scolaire complète (site web)"
+          : "تطبيق مدرسي متكامل (موقع ويب)",
         lang === "fr"
           ? "Dashboard administrateur avancé"
           : "لوحة تحكم متطورة للإدارة",
@@ -127,15 +127,19 @@ function App() {
         lang === "fr"
           ? "Système de notification"
           : "تواصل فوري",
-           lang === "fr"
+        lang === "fr"
           ? "QR Codes pour bus et services scolaires"
           : "رموز QR للحافلات والخدمات المدرسية",
         lang === "fr"
-          ? "Gestion Facebook complète "
+          ? "Gestion Facebook complète"
           : "إدارة كاملة لفيسبوك مع 12 حملة",
         lang === "fr"
           ? "+5000 abonnés ciblés (audience qualifiée)"
           : "+5000 متابع مستهدف (جمهور مؤهل)",
+        // AJOUT DU LIEN DE TEST
+        lang === "fr"
+          ? "Lien de test du site web: https://privetschool-front.ohbjmh.easypanel.host/"
+          : "رابط تجريبي للموقع: https://privetschool-front.ohbjmh.easypanel.host/"
       ],
       bestFor: lang === "fr" 
         ? "Écoles premium digitalisées" 
@@ -157,6 +161,39 @@ function App() {
   const handlePlanSelect = (planId) => {
     setSelectedPlan(planId);
     scrollToContact();
+  };
+
+  // Fonction pour formater les caractéristiques avec liens
+  const renderFeature = (feature, index) => {
+    // Vérifie si la caractéristique contient une URL
+    if (feature.includes('https://')) {
+      const parts = feature.split(': ');
+      if (parts.length === 2) {
+        const [label, url] = parts;
+        return (
+          <li key={index}>
+            <span className="check-icon">✓</span>
+            {label}: 
+            <a 
+              href={url.trim()} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="test-link"
+            >
+              {lang === "fr" ? " Voir le prototype" : " عرض النموذج"}
+            </a>
+          </li>
+        );
+      }
+    }
+    
+    // Sinon, rendu normal
+    return (
+      <li key={index}>
+        <span className="check-icon">✓</span>
+        {feature}
+      </li>
+    );
   };
 
   return (
@@ -236,12 +273,7 @@ function App() {
                 </div>
 
                 <ul>
-                  {plan.features.map((f, i) => (
-                    <li key={i}>
-                      <span className="check-icon">✓</span>
-                      {f}
-                    </li>
-                  ))}
+                  {plan.features.map((f, i) => renderFeature(f, i))}
                 </ul>
 
                 <div className="plan-extras">
